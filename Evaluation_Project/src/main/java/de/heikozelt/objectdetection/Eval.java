@@ -18,6 +18,12 @@ import org.apache.logging.log4j.Logger;
 
 import de.heikozelt.objectdetection.xml.GmafCollection;
 
+/**
+ * Vergleicht Ergebnis der Objekt-Erkennung (XML-Datei) mit den Annotationen (CSV-Datei)
+ * Zu jedem Bild wird der Precision- und Recall-Wert berechnet.
+ * Als Gesamt-Ergebnis wird der Durchschnitts-Precision- und Recall-Wert berechnet.
+ * @author Heiko Zelt
+ */
 public class Eval {
 	private static String resultXmlFilename = "result.xml";
 	private static String annotationsFilename = "annotations.csv";
@@ -25,8 +31,8 @@ public class Eval {
 	private static Logger logger = LogManager.getLogger(Eval.class);
 
 	/**
-	 * Liest die XML-Datei mit den Bilder-Dateinamen, erkannten Objekten und
-	 * weiteren Infos. Es wird die JAXB-Bibiothek verwendet und die Java-Klassen im
+	 * Liest eine XML-Datei mit den Bilder-Dateinamen, erkannten Objekten und
+	 * weiteren Infos. Es wird die JAXB-Bibliothek verwendet und die Java-Klassen im
 	 * Package de.heikozelt.objectdetection.xml.
 	 * 
 	 * @param resultXmlFilename
@@ -41,11 +47,12 @@ public class Eval {
 	}
 
 	/**
-	 * Liest die Annotationen aus der CSV-Datei Erste Spalte enthält den Dateinamen.
-	 * Weitere Spalten die Objekt-Klassen
+	 * Liest Annotationen aus einer CSV-Datei. Erste Spalte enthält den Dateinamen.
+	 * Weitere Spalten die Objektklassen.
+	 * Beispiel: "img001.png","Cat","Bicycle","Surfboard","Palm tree"
 	 * 
-	 * @param csvFilename
-	 * @return
+	 * @param csvFilename Beispiel: "annotations.csv"
+	 * @return HashMap mit Dateinamen als Key
 	 * @throws IOException
 	 */
 	private static HashMap<String, ImageWithObjects> readAnnotations(String csvFilename) throws IOException {
@@ -62,7 +69,7 @@ public class Eval {
 	}
 
 	/**
-	 * Checks, if keys of 2 maps are the same
+	 * Checks, if keys of 2 maps are equal.
 	 * 
 	 * @param map1
 	 * @param map2
@@ -82,6 +89,12 @@ public class Eval {
 		return true;
 	}
 
+	/**
+	 * Berechnet aus den Annotationen und den erkannten Objekten die Precision und Recall-Werte.
+	 * Die beiden HashMaps verwenden Dateinamen als Keys.
+	 * @param annotations HashMap mit Annotationen
+	 * @param detected HashMap mit erkannten Objekten
+	 */
 	public static void evaluate(HashMap<String, ImageWithObjects> annotations,
 			HashMap<String, ImageWithObjects> detected) {
 		SortedSet<String> sortedKeys = new TreeSet<String>();
