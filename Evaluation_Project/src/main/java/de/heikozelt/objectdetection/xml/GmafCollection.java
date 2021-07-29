@@ -14,6 +14,10 @@ public class GmafCollection {
 	@XmlElement(name = "gmaf-data")
 	private List<GmafData> gmafDatas;
 
+	public List<GmafData> getGmafDatas() {
+		return gmafDatas;
+	}
+
 	public HashMap<String, ImageWithObjects> asImagesWithObjects() {
 		HashMap<String, ImageWithObjects> map = new HashMap<String, ImageWithObjects>();
 		for (GmafData gd : gmafDatas) {

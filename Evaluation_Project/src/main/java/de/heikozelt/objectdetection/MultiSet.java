@@ -21,7 +21,7 @@ public class MultiSet {
 	/**
 	 * Bildet die Differenzmultimenge, wobei Elemente nur so häufig abgezogen werden, wie
 	 * Sie im zweiten Multiset enthalten sind. Beispiel: set1 = {"a", "b", "b",
-	 * "c"}, set2 = {"a", "b"}, set1.diffOccurences(set2) => {"b", "c"}
+	 * "c"}, set2 = {"a", "b"}, set1.diffOccurences(set2) liefert {"b", "c"}
 	 * 
 	 * @param elements2 MultiSet, welches angezogen wird.
 	 * @return MultiSet Ergebnis der Differenzmengen-Operation
@@ -41,7 +41,7 @@ public class MultiSet {
 	 * Bildet die Schnittmultimenge zwischen 2 MultiSets. Das Ergebnis-Multiset enthält
 	 * von einem Element, jeweils nur so viele Vorkommnisse, wie es in beiden
 	 * Multisets vorkommt. Beispiel: set1 = {"a", "b", "b", "c"}, set2 = {"a", "b",
-	 * "b", "d"}, set1.intersectOccurences(set2) => {"a", "b", "b"}
+	 * "b", "d"}, set1.intersectOccurences(set2) liefert {"a", "b", "b"}
 	 * 
 	 * @param elements2
 	 */

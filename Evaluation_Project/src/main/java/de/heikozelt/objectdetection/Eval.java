@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -19,9 +18,10 @@ import org.apache.logging.log4j.Logger;
 import de.heikozelt.objectdetection.xml.GmafCollection;
 
 /**
- * Vergleicht Ergebnis der Objekt-Erkennung (XML-Datei) mit den Annotationen (CSV-Datei)
- * Zu jedem Bild wird der Precision- und Recall-Wert berechnet.
- * Als Gesamt-Ergebnis wird der Durchschnitts-Precision- und Recall-Wert berechnet.
+ * Vergleicht Ergebnis der Objekt-Erkennung (XML-Datei) mit den Annotationen
+ * (CSV-Datei) Zu jedem Bild wird der Precision- und Recall-Wert berechnet. Als
+ * Gesamt-Ergebnis wird der Durchschnitts-Precision- und Recall-Wert berechnet.
+ * 
  * @author Heiko Zelt
  */
 public class Eval {
@@ -35,11 +35,11 @@ public class Eval {
 	 * weiteren Infos. Es wird die JAXB-Bibliothek verwendet und die Java-Klassen im
 	 * Package de.heikozelt.objectdetection.xml.
 	 * 
-	 * @param resultXmlFilename
-	 * @return
+	 * @param xmlFilename input filename 
+	 * @return GmafCollection, baumartige Struktur von Objekten (Document Object Tree)
 	 * @throws JAXBException
 	 */
-	private static GmafCollection readResults(String xmlFilename) throws JAXBException {
+	public static GmafCollection readResults(String xmlFilename) throws JAXBException {
 		File file = new File(xmlFilename);
 		JAXBContext jaxbContext = JAXBContext.newInstance(GmafCollection.class);
 		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
@@ -48,14 +48,14 @@ public class Eval {
 
 	/**
 	 * Liest Annotationen aus einer CSV-Datei. Erste Spalte enthält den Dateinamen.
-	 * Weitere Spalten die Objektklassen.
-	 * Beispiel: "img001.png","Cat","Bicycle","Surfboard","Palm tree"
+	 * Weitere Spalten die Objektklassen. Beispiel:
+	 * "img001.png","Cat","Bicycle","Surfboard","Palm tree"
 	 * 
 	 * @param csvFilename Beispiel: "annotations.csv"
 	 * @return HashMap mit Dateinamen als Key
 	 * @throws IOException
 	 */
-	private static HashMap<String, ImageWithObjects> readAnnotations(String csvFilename) throws IOException {
+	public static HashMap<String, ImageWithObjects> readAnnotations(String csvFilename) throws IOException {
 		File file = new File(csvFilename);
 		BufferedReader br = new BufferedReader(new FileReader(file));
 		HashMap<String, ImageWithObjects> map = new HashMap<String, ImageWithObjects>();
@@ -90,53 +90,37 @@ public class Eval {
 	}
 
 	/**
-	 * Berechnet aus den Annotationen und den erkannten Objekten die Precision und Recall-Werte.
-	 * Die beiden HashMaps verwenden Dateinamen als Keys.
+	 * Berechnet aus den Annotationen und den erkannten Objekten die Precision und
+	 * Recall-Werte. Die beiden HashMaps verwenden Dateinamen als Keys.
+	 * 
 	 * @param annotations HashMap mit Annotationen
-	 * @param detected HashMap mit erkannten Objekten
+	 * @param detected    HashMap mit erkannten Objekten
 	 */
-	public static void evaluate(HashMap<String, ImageWithObjects> annotations,
+	public static PrecisionAndRecall evaluate(HashMap<String, ImageWithObjects> annotations,
 			HashMap<String, ImageWithObjects> detected) {
 		SortedSet<String> sortedKeys = new TreeSet<String>();
 		sortedKeys.addAll(detected.keySet());
-		float sumRecall = 0f;
-		float sumPrecision = 0f;
-		for (String key : sortedKeys) {
-			String[] annos = annotations.get(key).getObjects();
-			String[] dets = detected.get(key).getObjects();
-			MultiSet annosMulti = new MultiSet(annos);
-			MultiSet detsMulti = new MultiSet(dets);
-			logger.info("key: " + key);
-			logger.debug("  annotations: " + String.join(",", annos));
-			logger.debug("  detected: " + String.join(",", dets));
-			List<String> truePositives = annosMulti.intersectOccurences(dets);
-			logger.debug("  true positives: " + truePositives);
-			List<String> falsePositives = detsMulti.diffOccurences(dets);
-			logger.debug("  false positives: " + falsePositives);
-			List<String> falseNegatives = annosMulti.diffOccurences(dets);
-			logger.debug("  false negatives: " + falseNegatives);
-			float precision;
-			if (dets.length == 0) {
-				// nichts erkannt, also auch keine falsch erkannt
-				precision = 1;
-			} else {
-				precision = truePositives.size() / (float) dets.length;
+		float averagePrecision;
+		float averageRecall;
+		if (sortedKeys.size() == 0) {
+			averagePrecision = 1f;
+			averageRecall = 1f;
+		} else {
+			float sumRecall = 0f;
+			float sumPrecision = 0f;
+			PrecisionAndRecall preAndRe = new PrecisionAndRecall();
+			for (String key : sortedKeys) {
+				logger.info("key: " + key);
+				String[] annos = annotations.get(key).getObjects();
+				String[] dets = detected.get(key).getObjects();
+				preAndRe.calculate(annos, dets);
+				sumPrecision += preAndRe.getPrecision();
+				sumRecall += preAndRe.getRecall();
 			}
-			logger.info("  precision: " + precision);
-			float recall;
-			if (annos.length == 0) {
-				recall = (dets.length == 0) ? 1 : 0;
-			} else {
-				recall = truePositives.size() / (float) annos.length;
-			}
-			logger.info("  recall: " + recall);
-			sumPrecision += precision;
-			sumRecall += recall;
+			averagePrecision = sumPrecision / sortedKeys.size();
+			averageRecall = sumRecall / sortedKeys.size();
 		}
-		float overallPrecision = sumPrecision / sortedKeys.size();
-		float overallRecall = sumRecall / sortedKeys.size();
-		logger.info("overall precision: " + overallPrecision);
-		logger.info("overall recall: " + overallRecall);
+		return new PrecisionAndRecall(averagePrecision, averageRecall);
 	}
 
 	/**
@@ -160,11 +144,13 @@ public class Eval {
 					"Anzahl und/oder Dateinamen der Bilder mit Anotationen und erkannten Objekten ist unterschiedlich!");
 			return;
 		}
-		if(annotations.size() == 0) {
+		if (annotations.size() == 0) {
 			logger.error("Keine Eingabedaten!");
 			return;
 		}
-		evaluate(annotations, detected);
+		PrecisionAndRecall average = evaluate(annotations, detected);
+		logger.info("overall average precision: " + average.getPrecision());
+		logger.info("overall average recall: " + average.getRecall());
 		logger.info("Evaluation batch job finished.");
 	}
 

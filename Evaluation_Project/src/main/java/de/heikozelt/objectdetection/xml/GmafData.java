@@ -5,7 +5,7 @@ import javax.xml.bind.annotation.XmlElement;
 public class GmafData {
 	private String file;
 	private String date;
-
+	
 	private DetObjects detObjects;
 
 	public String getFile() {

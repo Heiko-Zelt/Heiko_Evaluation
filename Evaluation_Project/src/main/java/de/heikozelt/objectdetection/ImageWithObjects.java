@@ -2,6 +2,9 @@ package de.heikozelt.objectdetection;
 
 import java.util.Arrays;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * Die Klasse beinhaltet einen Dateinamen/eine ID und die dazugehörigen
  * Klassennamen von erkannten Objekten oder Annotationen. Zur einfacheren
@@ -12,6 +15,8 @@ import java.util.Arrays;
  * @author Heiko Zelt
  */
 public class ImageWithObjects {
+	
+	private static Logger logger = LogManager.getLogger(ImageWithObjects.class);
 	/**
 	 * image id, for example filename
 	 */
@@ -34,7 +39,7 @@ public class ImageWithObjects {
 	 * simple constructor
 	 */
 	public ImageWithObjects(String id, String[] objects) {
-		this.id = id;
+		this.setId(id);
 		this.setObjects(objects);
 	}
 
@@ -44,15 +49,25 @@ public class ImageWithObjects {
 	 * @param csvLine Example "image01.png","dog","surfboard","bicycle"
 	 */
 	public ImageWithObjects(String csvLine) {
+		parseCSVLine(csvLine);
+	}
+	
+	/**
+	 * parses a line of a CSV file
+	 * 
+	 * @param csvLine Example "image01.png","dog","surfboard","bicycle"
+	 */	
+	public void parseCSVLine(String csvLine) {
 		String[] fields = csvLine.strip().split(",");
+		logger.debug("fields: " + String.join(",", fields));
 		// Quotation Marks entfernen, falls vorhanden:
 		for (int i = 0; i < fields.length; i++) {
 			if (fields[i].startsWith("\"") && fields[i].endsWith("\"")) {
 				fields[i] = fields[i].substring(1, fields[i].length() - 1);
 			}
 		}
-		this.id = fields[0];
-		setObjects(Arrays.copyOfRange(fields, 1, fields.length));
+		setId(fields[0]);
+		setObjects(Arrays.copyOfRange(fields, 1, fields.length));		
 	}
 
 	/**
@@ -79,6 +94,9 @@ public class ImageWithObjects {
 	 * @param id Dateiname
 	 */
 	public void setId(String id) {
+		if(id.length() == 0) {
+			throw new IllegalArgumentException("ID enthält Zeichenkette mit Länge 0!");
+		}
 		this.id = id;
 	}
 
@@ -92,6 +110,9 @@ public class ImageWithObjects {
 	public void setObjects(String[] objects) {
 		this.objects = new String[objects.length];
 		for (int i = 0; i < objects.length; i++) {
+			if(objects[i].length() == 0) {
+				throw new IllegalArgumentException("Objektklasse enthält Zeichenkette mit Länge 0!");
+			}
 			this.objects[i] = objects[i].toLowerCase();
 		}
 		Arrays.sort(this.objects);
