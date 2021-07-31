@@ -16,7 +16,7 @@ Andere Versionen funktionieren vermutlich auch. Ich habe aber nur mit diesen get
 In der Bash oder Git-Bash:
 
     cd Installations-Verzeichnis
-    git clone https://github.com/Heiko-Zelt/Heiko_Object_Detection
+    git clone https://github.com/Heiko-Zelt/Heiko_Evaluation
 
 in Eclipse
 1. Menüleiste > File > Open Projects from File System...
