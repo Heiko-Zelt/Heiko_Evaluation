@@ -19,7 +19,7 @@ import de.heikozelt.objectdetection.xml.GmafCollection;
 
 /**
  * Vergleicht Ergebnis der Objekt-Erkennung (XML-Datei) mit den Annotationen
- * (CSV-Datei) Zu jedem Bild wird der Precision- und Recall-Wert berechnet. Als
+ * (CSV-Datei). Zu jedem Bild wird der Precision- und Recall-Wert berechnet. Als
  * Gesamt-Ergebnis wird der Durchschnitts-Precision- und Recall-Wert berechnet.
  * 
  * @author Heiko Zelt
@@ -35,8 +35,9 @@ public class Eval {
 	 * weiteren Infos. Es wird die JAXB-Bibliothek verwendet und die Java-Klassen im
 	 * Package de.heikozelt.objectdetection.xml.
 	 * 
-	 * @param xmlFilename input filename 
-	 * @return GmafCollection, baumartige Struktur von Objekten (Document Object Tree)
+	 * @param xmlFilename input filename
+	 * @return GmafCollection, baumartige Struktur von Objekten (Document Object
+	 *         Tree)
 	 * @throws JAXBException
 	 */
 	public static GmafCollection readResults(String xmlFilename) throws JAXBException {
@@ -128,11 +129,25 @@ public class Eval {
 	 * enthält Annotationen. Die andere enthält erkannte Objekte. Die Annotationen
 	 * werden mit den erkannten Objekten verglichen.
 	 * 
-	 * @param args
+	 * @param args 1. Kommandozeilenparameter z.B. "result.xml", 2.
+	 *             Kommandozeilenparameter z.B. "annotations.csv".
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
 		logger.info("Evaluation batch job started.");
+
+		switch (args.length) {
+		case 0:
+			break;
+		case 2:
+			resultXmlFilename = args[0];
+			annotationsFilename = args[1];
+			break;
+		default:
+			logger.fatal(
+					"usage: java -cp ... de.heikozelt.objectdetection.BatchJob [<collections directory> <results file>]");
+			System.exit(1);
+		}
 
 		GmafCollection gmafCollection = readResults(resultXmlFilename);
 		HashMap<String, ImageWithObjects> annotations = readAnnotations(annotationsFilename);
