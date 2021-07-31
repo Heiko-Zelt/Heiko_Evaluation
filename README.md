@@ -2,7 +2,7 @@
 Vergleicht Ergebnis der Objekt-Erkennung mit Annotationen.
 
 ## Installations-Vorausetzungen
-- Internet-Verbindung (nur bei Installation)
+- Internet-Verbindung (nur während der Installation)
 - Ubuntu 20.04.1 oder Windows 10
 - git 2.25.1 oder Git for Windows v2.31.1
 - Apache Maven 3.6.3
@@ -16,7 +16,7 @@ Andere Versionen funktionieren vermutlich auch. Ich habe aber nur mit diesen get
 In der Bash oder Git-Bash:
 
     cd Installations-Verzeichnis
-    git clone https://github.com/Heiko-Zelt/Heiko_Object_Detection
+    git clone https://github.com/Heiko-Zelt/Heiko_Evaluation
 
 in Eclipse
 1. Menüleiste > File > Open Projects from File System...
