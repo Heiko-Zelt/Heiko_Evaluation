@@ -5,6 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * JUnit-Tests für die Klasse ImageWithObjetcs
+ * @author Heiko Zelt
+ */
 public class ImageWithObjectsTest {
 	
 	/**

@@ -6,6 +6,11 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * JUnit-Tests für die Klasse MutiSet
+ * @author Heiko Zelt
+ *
+ */
 public class MultiSetTest {
 	
 	/**

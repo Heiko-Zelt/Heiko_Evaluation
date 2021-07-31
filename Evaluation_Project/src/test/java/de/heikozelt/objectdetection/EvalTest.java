@@ -16,6 +16,10 @@ import de.heikozelt.objectdetection.xml.DetObjects;
 import de.heikozelt.objectdetection.xml.GmafCollection;
 import de.heikozelt.objectdetection.xml.GmafData;
 
+/**
+ * JUnit-Tests für die Klasse Eval
+ * @author Heiko Zelt
+ */
 public class EvalTest {
 
 	/**

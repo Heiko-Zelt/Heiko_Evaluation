@@ -4,6 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * JUnit-Tests für die Klasse PrecisionAndRecall
+ * @author Heiko Zelt
+ */
 public class PrecisionAndRecallTest {
 	
 	/**

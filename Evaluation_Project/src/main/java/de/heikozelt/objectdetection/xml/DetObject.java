@@ -5,6 +5,10 @@ import javax.xml.bind.annotation.XmlElement;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * XML-Element object = ein erkanntes Objekt
+ * @author Heiko Zelt
+ */
 public class DetObject {
 	private static Logger logger = LogManager.getLogger(DetObject.class);
 	private String term;

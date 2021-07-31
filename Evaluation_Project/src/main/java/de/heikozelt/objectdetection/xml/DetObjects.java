@@ -4,6 +4,10 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
 
+/**
+ * XML-Element objects / Container für Liste von erkannten Objekten
+ * @author Heiko Zelt
+ */
 public class DetObjects {
 	@XmlElement(name="object")
 	private List<DetObject> detObjectsList;

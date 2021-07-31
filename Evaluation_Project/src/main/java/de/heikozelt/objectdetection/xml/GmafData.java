@@ -2,6 +2,10 @@ package de.heikozelt.objectdetection.xml;
 
 import javax.xml.bind.annotation.XmlElement;
 
+/**
+ * Element gmaf-data = ein Bild
+ * @author Heiko Zelt
+ */
 public class GmafData {
 	private String file;
 	private String date;

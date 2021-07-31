@@ -25,7 +25,7 @@ import de.heikozelt.objectdetection.xml.GmafCollection;
  * @author Heiko Zelt
  */
 public class Eval {
-	private static String resultXmlFilename = "result.xml";
+	private static String resultXmlFilename = "detected/result.xml";
 	private static String annotationsFilename = "annotations.csv";
 
 	private static Logger logger = LogManager.getLogger(Eval.class);
@@ -164,8 +164,10 @@ public class Eval {
 			return;
 		}
 		PrecisionAndRecall average = evaluate(annotations, detected);
-		logger.info("overall average precision: " + average.getPrecision());
-		logger.info("overall average recall: " + average.getRecall());
+		logger.info("********* overall average **********");
+		logger.info("** precision: " + average.getPrecision());
+		logger.info("** recall   : " + average.getRecall());
+		logger.info("************************************");
 		logger.info("Evaluation batch job finished.");
 	}
 

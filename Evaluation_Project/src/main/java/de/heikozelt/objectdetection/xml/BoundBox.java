@@ -1,5 +1,9 @@
 package de.heikozelt.objectdetection.xml;
 
+/**
+ * XML-Element bounding-box, Properties x, y, width und height in Pixel
+ * @author Heiko Zelt
+ */
 public class BoundBox {
 	private int x;
 	private int y;

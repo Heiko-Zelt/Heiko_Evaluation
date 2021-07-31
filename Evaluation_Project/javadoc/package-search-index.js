@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"de.heikozelt.objectdetection"}]
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"de.heikozelt.objectdetection"},{"l":"de.heikozelt.objectdetection.xml"}]
